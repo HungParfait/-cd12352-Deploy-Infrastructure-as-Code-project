@@ -1,7 +1,274 @@
 Description: CD12352 - Infrastructure as Code Project - Network
-
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    6ad6530c-de03-4bce-93a2-44c53b3e9feb:
+      size:
+        width: 360
+        height: 330
+      position:
+        x: 1740
+        'y': -830
+      z: 0
+      embeds:
+        - 7f479f4b-e26b-499e-b070-d671b441be39
+    88ef226c-a0ee-43fc-9ab1-83e98ba6974d:
+      size:
+        width: 1430
+        height: 1400
+      position:
+        x: 120
+        'y': -640
+      z: 1
+      embeds: []
+    4e2e22b9-c489-4fd0-9c95-665092c909e4:
+      size:
+        width: 420
+        height: 240
+      position:
+        x: 2790
+        'y': 70
+      z: 0
+      embeds: []
+      dependson:
+        - 88ef226c-a0ee-43fc-9ab1-83e98ba6974d
+    307c0f59-5f27-47b5-be2e-1ee0386eabdc:
+      size:
+        width: 570
+        height: 360
+      position:
+        x: 1710
+        'y': 250
+      z: 0
+      embeds:
+        - 00616394-c618-4e54-9be5-1a0624096add
+      dependson:
+        - 88ef226c-a0ee-43fc-9ab1-83e98ba6974d
+    a7c1beb5-f71e-4ec2-bb74-354121b08814:
+      size:
+        width: 410
+        height: 310
+      position:
+        x: 2790
+        'y': -480
+      z: 0
+      embeds:
+        - 1ee13bf1-926d-4f5e-bd14-9f798e9136ad
+      dependson:
+        - 88ef226c-a0ee-43fc-9ab1-83e98ba6974d
+    00616394-c618-4e54-9be5-1a0624096add:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 1780
+        'y': 450
+      z: 1
+      parent: 307c0f59-5f27-47b5-be2e-1ee0386eabdc
+      embeds: []
+      dependson:
+        - 307c0f59-5f27-47b5-be2e-1ee0386eabdc
+    7f479f4b-e26b-499e-b070-d671b441be39:
+      size:
+        width: 90
+        height: 90
+      position:
+        x: 1950
+        'y': -630
+      z: 1
+      parent: 6ad6530c-de03-4bce-93a2-44c53b3e9feb
+      embeds: []
+      dependson:
+        - 6ad6530c-de03-4bce-93a2-44c53b3e9feb
+    1ee13bf1-926d-4f5e-bd14-9f798e9136ad:
+      size:
+        width: 150
+        height: 130
+      position:
+        x: 2870
+        'y': -390
+      z: 1
+      parent: a7c1beb5-f71e-4ec2-bb74-354121b08814
+      embeds: []
+      dependson:
+        - a7c1beb5-f71e-4ec2-bb74-354121b08814
+    1e26e56c-a5df-4ab9-87d9-5813e73f99ce:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 90
+        'y': 60
+      z: 1
+      embeds: []
 Parameters:
-  # Add your parameters here
-
+  VpcIPAddress:
+    Type: String
+    Default: 10.0.0.0/16
+  SubnetIPBlockAddress:
+    Type: CommaDelimitedList
+    Default: '10.0.4.0/24, 10.0.3.0/24, 10.0.2.0/24, 10.0.1.0/24'
 Resources:
-  # Add your resources here
+  PubSub2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: us-east-1a
+      CidrBlock: !Select [0, !Ref SubnetIPBlockAddress]
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 6ad6530c-de03-4bce-93a2-44c53b3e9feb
+    DependsOn:
+      - VPC
+  VPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+        CidrBlock: !Ref VpcIPAddress
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 88ef226c-a0ee-43fc-9ab1-83e98ba6974d
+  PriSub1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: us-east-1a
+      CidrBlock: !Select [1, !Ref SubnetIPBlockAddress]
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 4e2e22b9-c489-4fd0-9c95-665092c909e4
+    DependsOn:
+      - VPC
+  PubSub1:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: us-east-1c
+      CidrBlock: !Select [2, !Ref SubnetIPBlockAddress]
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 307c0f59-5f27-47b5-be2e-1ee0386eabdc
+    DependsOn:
+      - VPC
+  PriSub2:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      AvailabilityZone: us-east-1c
+      CidrBlock: !Select [3, !Ref SubnetIPBlockAddress]
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: a7c1beb5-f71e-4ec2-bb74-354121b08814
+    DependsOn:
+      - VPC
+  NATGateway:
+    Type: 'AWS::EC2::NatGateway'
+    Properties:
+      AllocationId: 
+        Fn::GetAtt: [ElasticIP, AllocationId]
+      SubnetId:
+        Ref: PubSub2
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 00616394-c618-4e54-9be5-1a0624096add
+    DependsOn:
+      - PubSub2
+  PubRT:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7f479f4b-e26b-499e-b070-d671b441be39
+  PriRT:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId:
+        Ref: VPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 1ee13bf1-926d-4f5e-bd14-9f798e9136ad
+  Route1:
+    Type: 'AWS::EC2::Route'
+    Properties:
+        DestinationCidrBlock: 0.0.0.0/0
+        GatewayId: !Ref InternetGateway
+        RouteTableId: !Ref PubRT
+    DependsOn: InternetGateway
+  Route3:
+    Type: 'AWS::EC2::Route'
+    Properties:
+        DestinationCidrBlock: 0.0.0.0/0
+        NatGatewayId: !Ref NATGateway
+        RouteTableId: !Ref PriRT
+    DependsOn: NATGateway
+  InternetGateway:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 1e26e56c-a5df-4ab9-87d9-5813e73f99ce
+  ElasticIP:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Domain: 'vpc'
+  VpcInternetGatewayAttachement:
+      Type: AWS::EC2::VPCGatewayAttachment
+      Properties :
+        InternetGatewayId: !Ref InternetGateway
+        VpcId: !Ref VPC
+  RTAssociation1:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PubRT
+      SubnetId: !Ref PubSub1
+  RTAssociation2:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PubRT
+      SubnetId: !Ref PubSub2
+  RTAssociation3:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PriRT
+      SubnetId: !Ref PriSub1
+  RTAssociation4:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties: 
+      RouteTableId: !Ref PriRT
+      SubnetId: !Ref PriSub2
+Outputs:
+  VpcId:
+    Description: VPC ID
+    Value: !Ref VPC
+    Export:
+      Name: 'VpcId'
+  PubSub1:
+    Description: Public Subnet 1 ID
+    Value: !GetAtt PubSub1.SubnetId
+    Export:
+      Name: 'PubSub1'
+  PubSub2:
+    Description: Public Subnet 2 ID
+    Value: !GetAtt PubSub2.SubnetId
+    Export:
+      Name: 'PubSub2'
+  PriSub1:
+    Description: Private Subnet 1 ID
+    Value: !GetAtt PriSub1.SubnetId
+    Export:
+      Name: 'PriSub1'
+  PriSub2:
+    Description: Private Subnet 2 ID
+    Value: !GetAtt PriSub2.SubnetId
+    Export:
+      Name: 'PriSub2'
+  VpcIpAddress:
+    Description: VPC ID
+    Value: !GetAtt VPC.CidrBlock
+    Export:
+      Name: 'UdagramVpcIpAddress'

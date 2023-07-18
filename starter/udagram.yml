@@ -1,18 +1,336 @@
 Description: CD12352 - Infrastructure as Code Project - Udagram
-
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    2f9c5afe-92b5-478b-aebf-f26ddae560ee:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 210
+        'y': 100
+      z: 0
+    7bdd011c-f19a-4c66-abb2-23cd5d5c21bc:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 757
+        'y': 78
+      z: 0
+      dependson:
+        - 2f9c5afe-92b5-478b-aebf-f26ddae560ee
+        - 0f75ed69-8146-4cb3-b5ec-7431da7215c6
+    e0f06837-ce3a-44da-8356-e3610a12c256:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 470
+        'y': 130
+      z: 0
+      dependson:
+        - 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+    fc2bf1d3-7b47-40be-8069-a20ecdc925e3:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 980
+        'y': 90
+      z: 0
+      dependson:
+        - 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+    3a85984d-4db7-40ca-a245-dc4cc497e496:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 988
+        'y': 215
+      z: 0
+      dependson:
+        - 3adc7269-b431-4c82-a159-fbcb12d89f95
+    3adc7269-b431-4c82-a159-fbcb12d89f95:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 334
+        'y': 177
+      z: 0
+    632d7037-2ca0-42bf-9bfc-f2210bdf3c8a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 755
+        'y': 196
+      z: 0
+      dependson:
+        - 3adc7269-b431-4c82-a159-fbcb12d89f95
+    c31e1cc2-1c19-4966-81a3-edfa40b909be:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 620
+        'y': 170
+      z: 0
+    0f75ed69-8146-4cb3-b5ec-7431da7215c6:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 142
+        'y': 246
+      z: 0
+      dependson:
+        - ba9d87ef-a1f5-49a5-bda3-2e519a67751e
+    ba9d87ef-a1f5-49a5-bda3-2e519a67751e:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 310
+      z: 0
+    2f262042-f77d-4f0b-b1a6-bb2dd171c5fe:
+      source:
+        id: e0f06837-ce3a-44da-8356-e3610a12c256
+      target:
+        id: 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+      z: 1
+    cd2d87eb-a0b7-4bc0-8577-42d6b0611b2c:
+      source:
+        id: fc2bf1d3-7b47-40be-8069-a20ecdc925e3
+      target:
+        id: 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+      z: 3
+    7ae3feb0-3f71-4b0e-9621-c7b6f9e569a7:
+      source:
+        id: 632d7037-2ca0-42bf-9bfc-f2210bdf3c8a
+      target:
+        id: 3adc7269-b431-4c82-a159-fbcb12d89f95
+      z: 4
+    9d5f3119-9b2a-4d07-8468-0a3ade8336b9:
+      source:
+        id: 3a85984d-4db7-40ca-a245-dc4cc497e496
+      target:
+        id: 3adc7269-b431-4c82-a159-fbcb12d89f95
+      z: 5
+    3ec4a396-ce15-49d5-8379-b67c20558636:
+      source:
+        id: 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+      target:
+        id: 2f9c5afe-92b5-478b-aebf-f26ddae560ee
+      z: 6
+    849812ef-9d76-4045-aceb-9e6c905f6da1:
+      source:
+        id: 0f75ed69-8146-4cb3-b5ec-7431da7215c6
+      target:
+        id: ba9d87ef-a1f5-49a5-bda3-2e519a67751e
+      z: 7
+    2e706ba0-b253-4caa-889f-f92ef85d2aec:
+      source:
+        id: 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+      target:
+        id: 0f75ed69-8146-4cb3-b5ec-7431da7215c6
+      z: 8
 Parameters:
-  # Add your parameters here
-
+  MinSize:
+    Type: Number
+    Default: 4
+  MaxSize:
+    Type: Number
+    Default: 6
+  PORT:
+    Type: Number
+    Default: 80
 Resources:
-  # Add your resources here
-  # We include a portion of the LaunchTemplate resource so you can use the UserData.
-  WebAppLaunchTemplate:
-    Type: AWS::EC2::LaunchTemplate
-    Properties: 
+  SecurityGroupForEC2:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: security-group-for-ec2
+      VpcId: !ImportValue VpcId
+      GroupDescription: security group for ec2
+      SecurityGroupIngress:
+        - CidrIp: !ImportValue UdagramVpcIpAddress
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+  ALBSecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupName: security-group-for-alb
+      VpcId: !ImportValue VpcId
+      GroupDescription: security group for alb
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          FromPort: 1
+          ToPort: 65535
+          CidrIp: 0.0.0.0/0
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 2f9c5afe-92b5-478b-aebf-f26ddae560ee
+  LaunchTemplate:
+    Type: 'AWS::EC2::LaunchTemplate'
+    Properties:
+      LaunchTemplateName: Template_V
       LaunchTemplateData:
+        BlockDeviceMappings:
+          - Ebs:
+              VolumeSize: 10
+              VolumeType: gp2
+              DeleteOnTermination: true
+              Encrypted: true
+            DeviceName: /dev/xvdcz
+        ImageId: ami-053b0d53c279acc90
+        InstanceType: t3.small
+        KeyName: key-pair-p1
+        SecurityGroupIds:
+          - !Ref SecurityGroupForEC2
         UserData:
           Fn::Base64: |
             #!/bin/bash
             apt-get update -y
             sudo apt-get install nginx -y
+            echo “it works! Udagram, Udacity” > /var/www/html/index.html
             service nginx start
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7bdd011c-f19a-4c66-abb2-23cd5d5c21bc
+    DependsOn:
+      - SecurityGroupForEC2
+  AutoSG:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones:
+        - us-east-1a
+        - us-east-1c
+      LaunchTemplate: 
+        LaunchTemplateId: !Ref LaunchTemplate         
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      MaxSize: 6
+      MinSize: !Ref MinSize
+      DesiredCapacity: 4
+      VPCZoneIdentifier: 
+              - !ImportValue PriSub1
+              - !ImportValue PriSub2 
+      TargetGroupARNs:
+        - !Ref TargetGroup
+    DependsOn:
+      - LaunchTemplate
+  TargetGroup:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Port: !Ref PORT
+      Protocol: HTTP
+      VpcId: !ImportValue VpcId
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3adc7269-b431-4c82-a159-fbcb12d89f95
+  ALB:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      IpAddressType: ipv4
+      Name: ApplicationLoadBalancer
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+      Subnets:
+        - !ImportValue PubSub1
+        - !ImportValue PubSub2
+      Scheme: internet-facing
+      Type: application
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 632d7037-2ca0-42bf-9bfc-f2210bdf3c8a
+    DependsOn:
+      - TargetGroup
+      - ALBSecurityGroup
+  Listener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties: 
+      DefaultActions: 
+        - TargetGroupArn: !Ref TargetGroup
+          Type: forward
+      LoadBalancerArn: !Ref ALB
+      Port: 80
+      Protocol: HTTP
+  S3Bucket:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      BucketName: 
+        Fn::Sub: 
+          - 'udacity-bucket-${AccountID}'
+          - AccountID: !Ref AWS::AccountId
+      PublicAccessBlockConfiguration:
+          BlockPublicAcls: True
+          BlockPublicPolicy: True
+          IgnorePublicAcls: True
+          RestrictPublicBuckets: True      
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c31e1cc2-1c19-4966-81a3-edfa40b909be
+  IAMRole:
+    Type: 'AWS::IAM::Role'
+    Properties:
+      AssumeRolePolicyDocument: {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Principal": {
+                    "Service": [
+                        "ec2.amazonaws.com"
+                    ]
+                },
+                "Action": [
+                    "sts:AssumeRole"
+                ]
+            }
+        ]
+      }
+      RoleName: 'EC2RoleName'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 0f75ed69-8146-4cb3-b5ec-7431da7215c6
+  IAMPolicy:
+    Type: 'AWS::IAM::Policy'
+    Properties:
+      Roles:
+        - !Ref IAMRole
+      PolicyName: S3ReadWritePolicy
+      PolicyDocument: {
+        "Version": "2012-10-17",
+        "Statement": [
+            {
+                "Effect": "Allow",
+                "Action": [
+                    "s3:Read*",
+                    "s3:Write*",
+                    "ssm:*"
+                ],
+                "Resource": "*"
+            }
+        ]
+      }   
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: ba9d87ef-a1f5-49a5-bda3-2e519a67751e
+Outputs:
+  'DNSName':
+    Description: DNS Name
+    Value: !Sub 
+        - 'http://${DNS}'
+        - DNS: !GetAtt ALB.DNSName

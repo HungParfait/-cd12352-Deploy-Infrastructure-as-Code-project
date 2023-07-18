@@ -1,6 +1,14 @@
 [
 	{
-		"ParameterKey": "Add you parameters here",
-		"ParameterValue": "Add you parameters here"
+		"ParameterKey": "MinSize",
+		"ParameterValue": 4
+	},
+	{
+		"ParameterKey": "MaxSize",
+		"ParameterValue": 6
+	},
+	{
+		"ParameterKey": "PORT",
+		"ParameterValue": 80
 	}
 ]
