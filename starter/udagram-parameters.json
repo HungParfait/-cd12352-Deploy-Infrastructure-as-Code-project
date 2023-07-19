@@ -1,14 +1,14 @@
 [
 	{
 		"ParameterKey": "MinSize",
-		"ParameterValue": 4
+		"ParameterValue": "4"
 	},
 	{
 		"ParameterKey": "MaxSize",
-		"ParameterValue": 6
+		"ParameterValue": "6"
 	},
 	{
 		"ParameterKey": "PORT",
-		"ParameterValue": 80
+		"ParameterValue": "80"
 	}
 ]

@@ -205,7 +205,7 @@ Resources:
             #!/bin/bash
             apt-get update -y
             sudo apt-get install nginx -y
-            echo “it works! Udagram, Udacity” > /var/www/html/index.html
+            echo "it works! Udagram, Udacity" > /var/www/html/index.html
             service nginx start
     Metadata:
       'AWS::CloudFormation::Designer':
